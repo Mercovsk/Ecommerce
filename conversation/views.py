@@ -17,13 +17,13 @@ def new_conversation(request, item_pk):
         form = ConversationMessageForm(request.POST)
         if form.is_valid():
             conversation = Conversation.objects.create(item=item)
-            conversation.members.add(item.created_by)
+            conversation.members.add(request.user)
             conversation.save()
 
             conversation_message = form.save(commit=False)
             conversation_message.conversation = conversation
             conversation_message.created_by = request.user
-
+            conversation_message.save()
             return redirect('item:detail', pk=item_pk)
         
     else:
