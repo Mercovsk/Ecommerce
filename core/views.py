@@ -5,8 +5,12 @@ from django.contrib import messages
 from .forms import SignUpForm
 
 def index(request):
-    items = Item.objects.filter(is_sold=False).order_by('-created_at')[0:6]
+    items = Item.objects.filter(is_sold=False).order_by('-created_at')
     categories = Category.objects.all()
+
+    category_id = request.GET.get('category', 0)
+    if category_id:
+        items = Item.objects.filter(category_id=category_id)
     
     return render(request, 'core/index.html', {
         'categories': categories,
